@@ -46,4 +46,24 @@ class ClasesModel extends DB {
             return "ERROR AL CARGAR.<br>" . $e->getMessage();
         }
     }
+
+    public function oneClaseByTitle($title) {
+        try {
+            $sql = "SELECT id_clase FROM $this->table WHERE title=?";
+
+            $sentencia = $this->conexion->prepare($sql);
+
+            $sentencia->bindParam(1, $title);
+
+            $sentencia->execute();
+
+            $row = $sentencia->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                return $row;
+            }
+            return "SIN DATOS";
+        } catch (PDOException $e) {
+            return "ERROR AL CARGAR.<br>" . $e->getMessage();
+        }
+    }
 }

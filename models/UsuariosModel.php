@@ -117,6 +117,22 @@ class UsuariosModel extends DB {
             $row = $sentencia->fetch(PDO::FETCH_ASSOC);
             if ($row) {
                 return $row;
+            } else {
+                $sql2 = "SELECT * FROM monitor WHERE email=?";
+
+                $sentencia2 = $this->conexion->prepare($sql2);
+
+                $sentencia2->bindParam(1, $email);
+
+                $sentencia2->execute();
+
+                $row2 = $sentencia2->fetch(PDO::FETCH_ASSOC);
+
+                if ($row2) {
+                    return $row2;
+                } else {
+                    return "SIN DATOS";
+                }
             }
             return "SIN DATOS";
         } catch (PDOException $e) {

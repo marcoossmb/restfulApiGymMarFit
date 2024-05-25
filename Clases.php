@@ -15,6 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $res = $clas->getOneClase($_GET['id_clase']);
         echo json_encode($res);
         exit();
+    } elseif (isset($_GET['title'])) {
+        $res = $clas->oneClaseByTitle($_GET['title']);
+        echo json_encode($res);
+        exit();
     } else {
         $res = $clas->getAllClases();
         echo json_encode($res);

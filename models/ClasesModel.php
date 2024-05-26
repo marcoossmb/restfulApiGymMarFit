@@ -29,7 +29,11 @@ class ClasesModel extends DB {
 
     public function getOneClase($id_clase) {
         try {
-            $sql = "SELECT c.*, m.nombre AS 'moninombre', m.apellido AS 'moniapellido' FROM $this->table c JOIN tiene t ON c.id_clase = t.id_clase JOIN monitor m ON m.id_monitor = t.id_monitor WHERE c.id_clase=?";
+            $sql = "SELECT c.*, m.nombre AS 'moninombre', m.apellido AS 'moniapellido'
+                FROM $this->table c
+                JOIN tiene t ON c.id_clase = t.id_clase 
+                JOIN monitor m ON m.id_monitor = t.id_monitor 
+                WHERE c.id_clase=?";
 
             $sentencia = $this->conexion->prepare($sql);
 
@@ -60,6 +64,27 @@ class ClasesModel extends DB {
             $row = $sentencia->fetch(PDO::FETCH_ASSOC);
             if ($row) {
                 return $row;
+            }
+            return "SIN DATOS";
+        } catch (PDOException $e) {
+            return "ERROR AL CARGAR.<br>" . $e->getMessage();
+        }
+    }
+
+    public function getClasesByUsuario($id_usuario) {
+        try {
+            $sql = "SELECT c.id_clase, c.title, c.tipo, c.descripcion, c.duracion, r.start, r.hora_clase 
+            FROM reserva r 
+            JOIN clase c ON r.id_clase = c.id_clase 
+            WHERE r.id_usuario = ? AND r.start > CURDATE()";
+
+            $sentencia = $this->conexion->prepare($sql);
+            $sentencia->bindParam(1, $id_usuario);
+            $sentencia->execute();
+
+            $rows = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+            if ($rows) {
+                return $rows;
             }
             return "SIN DATOS";
         } catch (PDOException $e) {

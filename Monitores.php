@@ -27,5 +27,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     }
 }
 
+// Borrar DELETE
+if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+    $id_monitor = $_GET['id_monitor'];
+    $res = $moni->eliminarMonitor($id_monitor);
+    $resul['resultado'] = $res;
+    echo json_encode($resul);
+    exit();
+}
+
+// POST
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    // se cargan toda la entrada que venga en php://input
+    $post = json_decode(file_get_contents('php://input'), true);
+    $res = $moni->agregarMonitor($post);
+    $resul['resultado'] = $res;
+    echo json_encode($resul);
+    exit();
+}
+
 // En caso de que ninguna de las opciones anteriores se haya ejecutado
 header("HTTP/1.1 400 Bad Request");

@@ -91,4 +91,24 @@ class ClasesModel extends DB {
             return "ERROR AL CARGAR.<br>" . $e->getMessage();
         }
     }
+
+    public function geNumeroUsersbyClass() {
+        try {
+            $sql = "SELECT c.title, COUNT(r.id_usuario) AS NumeroUsuarios
+                FROM clase c
+                JOIN reserva r ON c.id_clase = r.id_clase
+                GROUP BY c.title";
+
+            $sentencia = $this->conexion->prepare($sql);
+            $sentencia->execute();
+
+            $rows = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+            if ($rows) {
+                return $rows;
+            }
+            return "SIN DATOS";
+        } catch (PDOException $e) {
+            return "ERROR AL CARGAR.<br>" . $e->getMessage();
+        }
+    }
 }

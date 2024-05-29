@@ -29,7 +29,12 @@ class ReservasModel extends DB {
 
     public function getReservasMonitor($id_monitor) {
         try {
-            $sql = "SELECT c.title, r.* FROM $this->table r JOIN clase c ON r.id_clase = c.id_clase WHERE r.id_monitor = ? GROUP BY r.start, r.hora_clase";
+            $sql = "SELECT c.title, r.* 
+                FROM $this->table r 
+                JOIN clase c ON r.id_clase = c.id_clase 
+                WHERE r.id_monitor = ? AND r.start > CURDATE()
+                GROUP BY r.start, r.hora_clase";
+            
             $sentencia = $this->conexion->prepare($sql);
             $sentencia->bindParam(1, $id_monitor);
             $sentencia->execute();
@@ -76,7 +81,6 @@ class ReservasModel extends DB {
             } else {
                 return true;
             }
-
         } catch (PDOException $e) {
             throw new Exception("Error al obtener el id del monitor: " . $e->getMessage());
         }
@@ -90,9 +94,9 @@ class ReservasModel extends DB {
             if ($id_monitor_result === false) {
                 return "No se encontró un monitor para la clase y hora especificadas";
             }
-            
+
             $existeReserva = $this->comprobarDuplicado($post['start'], $post['hora_clase'], $post['id_usuario']);
-            
+
             if ($existeReserva) {
                 return 'Ya has realizado esta reserva';
             }

@@ -73,7 +73,7 @@ class ClasesModel extends DB {
 
     public function getClasesByUsuario($id_usuario) {
         try {
-            $sql = "SELECT c.id_clase, c.title, c.tipo, c.descripcion, c.duracion, r.start, r.hora_clase 
+            $sql = "SELECT c.id_clase, c.title, c.tipo, c.descripcion, c.duracion, r.start, r.hora_clase, r.id_usuario, r.id_reserva 
             FROM reserva r 
             JOIN clase c ON r.id_clase = c.id_clase 
             WHERE r.id_usuario = ? AND r.start > CURDATE()";
